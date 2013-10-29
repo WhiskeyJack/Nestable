@@ -1,0 +1,3 @@
+# Ignore Netbeans metadata
+nbproject/*
+/nbproject/private/
