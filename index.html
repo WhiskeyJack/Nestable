@@ -204,6 +204,14 @@ p { line-height: 1.5em; }
 			<li>Simply for presentation, I added a CDN bootstrap link on this page to use icons for expand/collapse, and I modified the CSS for gradients.</li>
 		</ul>
 	</div>
+    	<div class='alert alert-block'>
+		<h4>Per item maxDepth Support</h4>
+		<ul>
+			<li>FIX: Dropping from vertical move action calculated depth incorrectly.</li>
+			<li>FEATURE: Added per item maxdepth support. This can be set with "data-maxdepth" attribute.</li>
+		
+		</ul>
+	</div>
 
 <p><strong>PLEASE NOTE: I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.</strong></p>
 
@@ -216,9 +224,9 @@ p { line-height: 1.5em; }
 
         <div class="dd" id="nestable">
             <ol class="dd-list">
-                <li class="dd-item" data-id="1">
+                <li class="dd-item" data-id="1" data-maxdepth="2">
 					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
-                    <div class="dd-handle">Item 1</div>
+                    <div class="dd-handle">Item 1 (max depth for this item is set to 2)</div>
                 </li>
                 <li class="dd-item" data-id="2">
 					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
@@ -355,6 +363,7 @@ $(document).ready(function()
     // activate Nestable for list 1
     $('#nestable').nestable({
         group: 1,
+        maxDepth: 3,
 		expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button"><i class="icon-chevron-right"></i></button>',
 		collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>',
 		customActions   : {

@@ -197,6 +197,7 @@
             this.dragDepth  = 0;
             this.hasNewRoot = false;
             this.pointEl    = null;
+            this.dragElMaxDepth = 99;
         },
 
         expandItem: function(li)
@@ -258,6 +259,7 @@
                 dragItem = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
+            this.dragElMaxDepth = $(dragItem).data("maxdepth") == null ? 99 : $(dragItem).data("maxdepth");
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
             mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
@@ -306,10 +308,16 @@
             }
             this.reset();
         },
-        canDrop: function(prev, opt) {
-            var depth = this.placeEl.parents(opt.listNodeName).length;
-            return !prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth
+        canDrop: function(prev, opt, depth) {
+            var a = 1;
+            if (typeof depth == 'undefined') {
+                depth = this.placeEl.parents(opt.listNodeName).length;
+                a = 0;
+            }
+            // console.log (" depth=" + depth + " dragDepth=" + this.dragDepth + " maxDepth=" + opt.maxDepth + " maxElDepth=" + this.dragElMaxDepth );
+            return !prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth 
                 && opt.isNestAllowed(prev,this.dragEl.children(opt.itemNodeName).first() )
+                && depth + this.dragDepth - a <= this.dragElMaxDepth
         },
         addToList: function( dropPoint, opt ) {
             var list = dropPoint.find(opt.listNodeName).last();
@@ -428,7 +436,7 @@
                 }
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
-                if (depth > opt.maxDepth) {
+                if (depth > opt.maxDepth || depth > this.dragElMaxDepth) {
                     return;
                 }
                 var before      = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2),
@@ -440,13 +448,13 @@
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
                 }
-                else if (before && this.canDrop(dropPoint,opt)) {
+                else if (before && this.canDrop(dropPoint,opt,depth)) {
                     this.pointEl.before(this.placeEl);
                 }
-                else if( this.canDrop(dropPoint,opt) ) {
+                else if( this.canDrop(dropPoint,opt,depth) ) {
                     this.pointEl.after(this.placeEl);
                 }
-                else if( this.canDrop(this.pointEl,opt) ) {
+                else if( this.canDrop(this.pointEl,opt,depth) ) {
                     this.addToList(this.pointEl,opt);
                 }
                 if (!parent.children().length) {
