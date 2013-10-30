@@ -1,6 +1,7 @@
 /*!
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  * Dual-licensed under the BSD or MIT licenses
+ * Version 2013-10-30-WJ
  */
 ;(function($, window, document, undefined)
 {
